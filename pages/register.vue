@@ -46,7 +46,6 @@ const submitForm = async () => {
 
             if (response.status === 200) {
                 console.log(response);
-                alert("Registration successful");
                 navigateTo('/login');
             }
         }, 1000);

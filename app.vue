@@ -25,7 +25,7 @@
 button,
 .button {
   cursor: pointer;
-  padding: 16px 24px;
+  padding: 12px 24px;
   border-radius: 10px;
   border: none;
   font-size: 12px;
