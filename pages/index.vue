@@ -13,16 +13,22 @@
                     <li @click="selectPages(page.id)" class="pages">{{ page.name }}</li>
                 </ul>
             </div>
+            <button class="purple flex" @click="submitPages">
+                <div v-if="!loading">Submit</div>
+                <div v-else class="spinner"></div>
+            </button>
         </div>
     </div>
 </template>
 
 <script setup>
 import { MetaApis } from '~/server/metaApis';
+const _metaApis = new MetaApis();
 
-const isConnected = ref(false);
+const isConnected = ref(true);
 const pages = ref([]);
 const selectedPages = ref([]);
+const loading = ref(false);
 
 pages.value = [
     {
@@ -49,7 +55,6 @@ pages.value = [
 
 const connectToFacebook = async () => {
     try {
-        const _metaApis = new MetaApis();
         const resposnse = await _metaApis.intializeFacebookOauth();
         console.log(resposnse);
         
@@ -60,11 +65,30 @@ const connectToFacebook = async () => {
 
 const selectPages = async (pageId) => {
     try {
-        isConnected.value = false;
         selectedPages.value.push(pageId);
-        const response = await _metaApis.selectPages(selectedPages.value);
+        console.log(selectedPages.value);
     } catch (error) {
         console.error("Error while selecting pages", error);
+    }
+}
+
+const submitPages = async () => {
+    try {
+        loading.value = true;
+        const response = await _metaApis.selectPages(selectedPages.value);
+        setTimeout(() => {
+            if(response.status === 200) {
+                console.log("Pages integrated successfully");
+                alert("Pages integrated successfully");
+            } else {
+                console.log("Error while submitting selected pages", response.data);
+                alert("Error while submitting selected pages");
+            }
+        }, 1000)
+    } catch (error) {
+        console.error("Error while submit selected pages", error);
+    } finally {
+        loading.value = false;
     }
 }
 </script>
@@ -102,5 +126,18 @@ const selectPages = async (pageId) => {
     border-radius: 5px;
     cursor: pointer;
     text-align: center;
+}
+
+.spinner {
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-radius: 50%;
+    border-top: 4px solid #fff;
+    width: 1.5rem;
+    height: 1.5rem;
+    animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 </style>
