@@ -1,25 +1,33 @@
 <template>
-    <div class="container flex flex-column">
-        <h1>Home</h1>
-        <div v-if="!isConnected" class="facebook-container flex flex-column">
-            <p>Connect with Facebook</p>
-            <button @click="connectToFacebook" class="green flex">
-                <div v-if="!loading">Connect</div>
+    <div class="root-container">
+        <div class="top-row flex">
+            <h1>Home</h1>
+            <button class="red" @click="logout">
+                <div v-if="!loading">Logout</div>
                 <div v-else class="spinner"></div>
             </button>
         </div>
-        <div v-else class="connected-container flex flex-column">
-            <p>You are connected.</p>
-            <p>choose the facebook pages you want to integrate</p>
-            <div class="page-container flex flex-column">
-                <ul class="" v-for="page in pages" :key="page.id">
-                    <li @click="selectPages(page.id)" class="pages">{{ page.name }}</li>
-                </ul>
+        <div class="container flex flex-column">
+            <div v-if="!isConnected" class="facebook-container flex flex-column">
+                <p>Connect with Facebook</p>
+                <button @click="connectToFacebook" class="green flex">
+                    <div v-if="!loading">Connect</div>
+                    <div v-else class="spinner"></div>
+                </button>
             </div>
-            <button class="purple flex" @click="submitPages">
-                <div v-if="!loading">Submit</div>
-                <div v-else class="spinner"></div>
-            </button>
+            <div v-else class="connected-container flex flex-column">
+                <p>You are connected.</p>
+                <p>choose the facebook pages you want to integrate</p>
+                <div class="page-container flex flex-column">
+                    <ul class="" v-for="page in pages" :key="page.id">
+                        <li @click="selectPages(page.id)" class="pages">{{ page.name }}</li>
+                    </ul>
+                </div>
+                <button class="purple flex" @click="submitPages">
+                    <div v-if="!loading">Submit</div>
+                    <div v-else class="spinner"></div>
+                </button>
+            </div>
         </div>
     </div>
 </template>
@@ -119,13 +127,43 @@ const submitPages = async () => {
         loading.value = false;
     }
 }
+
+const logout = async () => {
+    try {
+        loading.value = true;
+        setTimeout(() => {
+            useCookie('accessToken').value = null;
+            useCookie('refreshToken').value = null;
+            navigateTo('/login');
+        }, 1000)
+    } catch (error) {
+        console.error("Error while logging out", error);
+    }
+}
 </script>
 
 <style lang="scss" scoped>
+.root-container {
+    min-height: 100vh;
+}
+
+.top-row {
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 40px;
+}
+
+.red {
+    background-color: transparent;
+    color: red;
+    border: red 1px solid;
+    padding: 8px 20px;
+}
+
 .container {
     justify-content: center;
-    min-height: 100vh;
     align-items: center;
+    margin-top: 50px;
 }
 
 .facebook-container {
