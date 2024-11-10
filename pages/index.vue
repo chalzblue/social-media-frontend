@@ -58,16 +58,15 @@ const connectToFacebook = async () => {
     }
 }
 
-const selectPages = (pageId) => {
+const selectPages = async (pageId) => {
     try {
         isConnected.value = false;
         selectedPages.value.push(pageId);
-        // const response = ;
+        const response = await _metaApis.selectPages(selectedPages.value);
     } catch (error) {
         console.error("Error while selecting pages", error);
     }
 }
-
 </script>
 
 <style lang="scss" scoped>

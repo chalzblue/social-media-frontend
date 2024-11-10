@@ -9,4 +9,12 @@ export class MetaApis {
             console.log(error);
         }
     }
+
+    selectPages = async (pages: string[]) => {
+        try {
+            return await axios.post(`${this.backendUrl}/api/v1/auth/facebook/selectPage`, {pages}, {withCredentials: true});
+        } catch (error) {
+            console.log(error);
+        }
+    }
 }
