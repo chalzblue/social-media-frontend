@@ -13,6 +13,8 @@ export class AuthApis {
 
     // register
     register = async (userData: { email: string, password: string, userName: string, company: string}) => {
-        return await axios.post(`${backendUrl}/api/v1/subscriber/register`, { userData })
+        console.log(userData);
+        
+        return await axios.post(`${backendUrl}/api/v1/subscriber/register`, { ...userData })
     }
 }

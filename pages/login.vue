@@ -9,6 +9,7 @@
                     <div v-if="!loading">Login</div>
                     <div v-else class="spinner"></div>
                 </button>
+                <p>Don't have an account? <nuxt-link class="link" to="/register">Sign Up</nuxt-link></p>
             </form>
         </div>
     </div>
@@ -103,5 +104,12 @@ button {
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+p {
+    font-size: 12px;
+    .link {
+        text-decoration: none;
+    }
 }
 </style>

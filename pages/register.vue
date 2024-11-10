@@ -2,22 +2,61 @@
     <div class="container flex flex-column">
         <div class="form flex flex-column">
             <h2>Sign Up</h2>
-            <form class="flex flex-column">
-                <input type="email" placeholder="Email">
-                <input type="text" placeholder="Username">
-                <input type="text" placeholder="Company">
-                <input type="password" placeholder="Password">
-                <button class="purple" type="submit">Register</button>
+            <form @submit.prevent="submitForm" class="flex flex-column">
+                <input required id="email" v-model="email" type="email" placeholder="Email">
+                <input required id="username" v-model="username" type="text" placeholder="Username">
+                <input required id="company" v-model="company" type="text" placeholder="Company">
+                <input required id="password" v-model="password" type="password" placeholder="Password">
+                <button class="purple flex" type="submit">
+                    <div v-if="!loading">Register</div>
+                    <div v-else class="spinner"></div>
+                </button>
+                <p>Already have an account? <nuxt-link class="link" to="/login">Sign In</nuxt-link></p>
             </form>
         </div>
     </div>
 </template>
 
 <script setup>
+import { AuthApis } from '~/server/authApis';
+
 const email = ref('');
 const username = ref('');
 const company = ref('');
 const password = ref('');
+const loading = ref('');
+
+const submitForm = async () => {
+    try {
+        loading.value = true;
+        const _authApis = new AuthApis();
+        const paylaod = {
+            email: email.value,
+            password: password.value,
+            userName: username.value,
+            company: company.value,
+        }        
+        const response = await _authApis.register(paylaod);
+
+        setTimeout(() => {
+            if (response.status !== 200) {
+                console.log(response);
+                alert("Registration failed. Please try again");
+            }
+
+            if (response.status === 200) {
+                console.log(response);
+                alert("Registration successful");
+                navigateTo('/login');
+            }
+        }, 1000);
+    } catch (error) {
+        console.log(error);
+        alert("Registration failed. Please try again")
+    } finally {
+        loading.value = false;
+    }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -48,5 +87,29 @@ input {
     border-radius: 5px;
     border: 1px solid #ccc;
     font-size: 12px;
+}
+
+button {
+    justify-content: center;
+}
+
+.spinner {
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-radius: 50%;
+    border-top: 4px solid #fff;
+    width: 1.5rem;
+    height: 1.5rem;
+    animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+p {
+    font-size: 12px;
+    .link {
+        text-decoration: none;
+    }
 }
 </style>
