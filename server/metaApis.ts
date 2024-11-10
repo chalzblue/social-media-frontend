@@ -7,6 +7,16 @@ export class MetaApis {
             return await axios.get(`${this.backendUrl}/api/v1/meta_auth/facebook`, {withCredentials: true});
         } catch (error) {
             console.log(error);
+            throw error;
+        }
+    }
+
+    fetchPages = async () => {
+        try {
+            return await axios.get(`${this.backendUrl}/api/v1/auth/facebook/fetchPages`, {withCredentials: true});
+        } catch (error) {
+            console.log(error);
+            throw error;
         }
     }
 
@@ -15,6 +25,7 @@ export class MetaApis {
             return await axios.post(`${this.backendUrl}/api/v1/auth/facebook/selectPage`, {pages}, {withCredentials: true});
         } catch (error) {
             console.log(error);
+            throw error;
         }
     }
 }

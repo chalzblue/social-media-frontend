@@ -3,7 +3,10 @@
         <h1>Home</h1>
         <div v-if="!isConnected" class="facebook-container flex flex-column">
             <p>Connect with Facebook</p>
-            <button @click="connectToFacebook" class="green">Connect</button>
+            <button @click="connectToFacebook" class="green flex">
+                <div v-if="!loading">Connect</div>
+                <div v-else class="spinner"></div>
+            </button>
         </div>
         <div v-else class="connected-container flex flex-column">
             <p>You are connected.</p>
@@ -55,11 +58,36 @@ pages.value = [
 
 const connectToFacebook = async () => {
     try {
+        loading.value = true;
         const resposnse = await _metaApis.intializeFacebookOauth();
         console.log(resposnse);
-        
+        setTimeout(async () => {
+            if(resposnse.status === 200) {
+                isConnected.value = true;
+                pages.value = await fetchPagesOfUser();
+            } else {
+                isConnected.value = false;
+                console.error("Error while connecting to facebook", resposnse.data);
+                alert("Error while connecting to facebook");
+            }
+        }, 1000);
     } catch (error) {
         console.error("Error while connecting to facebook", error);
+    } finally {
+        loading.value = false;
+    }
+}
+
+const fetchPagesOfUser = async () => {
+    try {
+        const response = await _metaApis.fetchPages();
+        if(response.status !== 200) {
+            console.error("Error while fetching pages", response.data);
+            return [];
+        }
+        return response.data;;
+    } catch (error) {
+        console.error("Error while fetching pages", error);   
     }
 }
 
