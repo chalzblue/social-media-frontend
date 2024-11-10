@@ -16,8 +16,8 @@
                 </button>
             </div>
             <div v-else class="connected-container flex flex-column">
-                <p>You are connected.</p>
-                <p>choose the facebook pages you want to integrate</p>
+                <p class="connected-msg">You are connected.</p>
+                <p>choose the facebook pages you want to integrate.</p>
                 <div class="page-container flex flex-column">
                     <ul class="" v-for="page in pages" :key="page.id">
                         <li @click="selectPages(page.id)" class="pages">{{ page.name }}</li>
@@ -163,7 +163,7 @@ const logout = async () => {
 .container {
     justify-content: center;
     align-items: center;
-    margin-top: 50px;
+    margin-top: 40px;
 }
 
 .facebook-container {
@@ -177,13 +177,26 @@ const logout = async () => {
     align-items: center;
 }
 
+.connected-msg {
+    font-size: 20px;
+    color: green;
+    font-weight: 600;
+}
+
 .page-container {
-    margin-top: 8px;
+    margin: 8px;
     gap: 6px;
     width: 100%;
     max-height: 200px;
     overflow-y: auto;
     scroll-behavior: smooth;
+    padding: 0 20px;
+
+    ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }
 }
 
 .pages {
