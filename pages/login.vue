@@ -1,7 +1,7 @@
 <template>
     <div class="container flex flex-column">
         <div class="form flex flex-column">
-            <h2>Login</h2>
+            <h2>Sign In</h2>
             <form class="flex flex-column">
                 <input type="email" placeholder="Email">
                 <input type="password" placeholder="Password">
