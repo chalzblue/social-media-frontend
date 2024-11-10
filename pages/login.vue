@@ -12,11 +12,40 @@
 </template>
 
 <script setup>
+import { AuthApis } from '~/server/authApis';
+
 const email = ref('');
 const password = ref('');
+const role = ref('subscriber');
 
-const submitForm = () => {
-    
+const submitForm = async () => {
+    try {
+        const _authApis = new AuthApis();
+        const paylaod = {
+            email: email.value,
+            password: password.value,
+            role: role.value
+        }        
+        const response = await _authApis.login(paylaod);
+        
+        if (response.status !== 200) {
+            console.log(response);
+            alert("Login failed. Please try again.");
+        }
+
+        if (response.status === 200) {
+            const accessToken = response.data.payload.accessToken;
+            const refreshToken = response.data.payload.refreshToken;
+
+            localStorage.setItem('accessToken', accessToken);
+            localStorage.setItem('refreshToken', refreshToken);
+
+            navigateTo('/');
+        }
+    } catch (error) {
+        console.log(error);
+        alert("Login failed. Please try again.");
+    }
 }
 </script>
 
