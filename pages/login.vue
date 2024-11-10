@@ -5,7 +5,10 @@
             <form class="flex flex-column">
                 <input required id="email" v-model="email" type="email" placeholder="Email">
                 <input required id="password" v-model="password" type="password" placeholder="Password">
-                <button class="purple" type="submit">Login</button>
+                <button class="purple flex" type="submit">
+                    <div v-if="!loading">Login</div>
+                    <div v-else class="spinner"></div>
+                </button>
             </form>
         </div>
     </div>
@@ -17,9 +20,11 @@ import { AuthApis } from '~/server/authApis';
 const email = ref('');
 const password = ref('');
 const role = ref('subscriber');
+const loading = ref(false);
 
 const submitForm = async () => {
     try {
+        loading.value = true;
         const _authApis = new AuthApis();
         const paylaod = {
             email: email.value,
@@ -28,23 +33,27 @@ const submitForm = async () => {
         }        
         const response = await _authApis.login(paylaod);
         
-        if (response.status !== 200) {
-            console.log(response);
-            alert("Login failed. Please try again.");
-        }
+        setTimeout(() => {
+            if (response.status !== 200) {
+                console.log(response);
+                alert("Login failed. Please try again.");
+            }
 
-        if (response.status === 200) {
-            const accessToken = response.data.payload.accessToken;
-            const refreshToken = response.data.payload.refreshToken;
+            if (response.status === 200) {
+                const accessToken = response.data.payload.accessToken;
+                const refreshToken = response.data.payload.refreshToken;
 
-            localStorage.setItem('accessToken', accessToken);
-            localStorage.setItem('refreshToken', refreshToken);
+                useCookie('accessToken').value = accessToken;
+                useCookie('refreshToken').value = refreshToken;
 
-            navigateTo('/');
-        }
+                navigateTo('/');
+            }
+        },1000)
     } catch (error) {
         console.log(error);
         alert("Login failed. Please try again.");
+    } finally {
+        loading.value = false;
     }
 }
 </script>
@@ -77,5 +86,22 @@ input {
     border-radius: 5px;
     border: 1px solid #ccc;
     font-size: 12px;
+}
+
+button {
+    justify-content: center;
+}
+
+.spinner {
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-radius: 50%;
+    border-top: 4px solid #fff;
+    width: 1.5rem;
+    height: 1.5rem;
+    animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 </style>
