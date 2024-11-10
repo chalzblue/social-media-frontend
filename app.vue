@@ -20,22 +20,15 @@
   @media (min-width: 900px) {
     flex-direction: row !important;
   }
-
-  .app-content {
-    padding: 0 20px;
-    flex: 1;
-    position: relative;
-  }
 }
 
 button,
 .button {
   cursor: pointer;
   padding: 16px 24px;
-  border-radius: 30px;
+  border-radius: 10px;
   border: none;
   font-size: 12px;
-  margin-right: 8px;
   color: #fff;
 }
 
