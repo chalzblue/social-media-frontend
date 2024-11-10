@@ -3,7 +3,7 @@
         <div class="top-row flex">
             <h1>Home</h1>
             <button class="red" @click="logout">
-                <div v-if="!loading">Logout</div>
+                <div v-if="!logoutLoading">Logout</div>
                 <div v-else class="spinner"></div>
             </button>
         </div>
@@ -40,6 +40,7 @@ const isConnected = ref(true);
 const pages = ref([]);
 const selectedPages = ref([]);
 const loading = ref(false);
+const logoutLoading = ref(false);
 
 pages.value = [
     {
@@ -130,7 +131,7 @@ const submitPages = async () => {
 
 const logout = async () => {
     try {
-        loading.value = true;
+        logoutLoading.value = true;
         setTimeout(() => {
             useCookie('accessToken').value = null;
             useCookie('refreshToken').value = null;
