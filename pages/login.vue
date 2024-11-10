@@ -1,10 +1,10 @@
 <template>
     <div class="container flex flex-column">
-        <div class="form flex flex-column">
+        <div @submit.prevent="submitForm" class="form flex flex-column">
             <h2>Sign In</h2>
             <form class="flex flex-column">
-                <input type="email" placeholder="Email">
-                <input type="password" placeholder="Password">
+                <input required id="email" v-model="email" type="email" placeholder="Email">
+                <input required id="password" v-model="password" type="password" placeholder="Password">
                 <button class="purple" type="submit">Login</button>
             </form>
         </div>
@@ -14,6 +14,10 @@
 <script setup>
 const email = ref('');
 const password = ref('');
+
+const submitForm = () => {
+    
+}
 </script>
 
 <style lang="scss" scoped>
