@@ -19,9 +19,9 @@
                 <p class="connected-msg">You are connected.</p>
                 <p>choose the facebook pages you want to integrate.</p>
                 <div class="page-container flex flex-column">
-                    <ul class="" v-for="page in pages" :key="page.id">
-                        <li @click="selectPages(page.id)" class="pages">{{ page.name }}</li>
-                    </ul>
+                    <ol class="pages" v-for="page in pages" :key="page.id">
+                        <li @click="selectPages(page.id)" class="">{{ page.name }}</li>
+                    </ol>
                 </div>
                 <button class="purple flex" @click="submitPages">
                     <div v-if="!loading">Submit</div>
@@ -41,29 +41,7 @@ const pages = ref([]);
 const selectedPages = ref([]);
 const loading = ref(false);
 const logoutLoading = ref(false);
-
-pages.value = [
-    {
-        id: 1,
-        name: "Page 1"
-    },
-    {
-        id: 2,
-        name: "Page 2"
-    },
-    {
-        id: 3,
-        name: "Page 3"
-    },
-    {
-        id: 4,
-        name: "Page 4"
-    },
-    {
-        id: 5,
-        name: "Page 5"
-    }
-]
+pages.value = [];
 
 const checkIfConnectedWithFacebook = async () => {
     const response = await _metaApis.checkIfConnectedWithFacebook();
@@ -71,7 +49,16 @@ const checkIfConnectedWithFacebook = async () => {
         useCookie('facebook_connected').value = true;
         isConnected.value = true;
         const fetchedPages= await fetchPagesOfUser();
-        pages.value.push(fetchedPages);
+        if(fetchedPages && fetchedPages.payload.length > 0) {
+            for (const page of fetchedPages.payload) {
+                const pageData = {
+                    id: page.id,
+                    name: page.name,
+                    access_token: page.access_token
+                };
+                pages.value.push(pageData);
+            }
+        }
     } else {
         useCookie('facebook_connected').value = false;
         isConnected.value = false;
@@ -219,17 +206,11 @@ const logout = async () => {
     overflow-y: auto;
     scroll-behavior: smooth;
     padding: 0 20px;
-
-    ul {
-        list-style-type: none;
-        padding: 0;
-        margin: 0;
-    }
 }
 
 .pages {
     border: 1px solid #ccc;
-    padding: 10px;
+    padding: 10px 30px;
     border-radius: 5px;
     cursor: pointer;
     text-align: center;
