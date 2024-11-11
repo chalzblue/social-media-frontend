@@ -19,9 +19,9 @@
                 <p class="connected-msg">You are connected.</p>
                 <p>choose the facebook pages you want to integrate.</p>
                 <div class="page-container flex flex-column">
-                    <ol class="pages" v-for="page in pages" :key="page.id">
+                    <ul class="pages" v-for="page in pages" :key="page.id">
                         <li @click="selectPages(page.id)" class="">{{ page.name }}</li>
-                    </ol>
+                    </ul>
                 </div>
                 <button class="purple flex" @click="submitPages">
                     <div v-if="!loading">Submit</div>
@@ -41,7 +41,13 @@ const pages = ref([]);
 const selectedPages = ref([]);
 const loading = ref(false);
 const logoutLoading = ref(false);
-pages.value = [];
+pages.value = [
+    {
+        id: 2,
+        name: "sample",
+        access_token: ''
+    }
+];
 
 const checkIfConnectedWithFacebook = async () => {
     const response = await _metaApis.checkIfConnectedWithFacebook();
