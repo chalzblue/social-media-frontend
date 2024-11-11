@@ -9,7 +9,7 @@
         </div>
         <div class="container flex flex-column">
             <div v-if="!isConnected" class="facebook-container flex flex-column">
-                <p>Connect with Facebook</p>
+                <h3>Authenticate with Facebook.</h3>
                 <button @click="connectToFacebook" class="green flex">
                     <div v-if="!loading">Connect</div>
                     <div v-else class="spinner"></div>
@@ -36,7 +36,7 @@
 import { MetaApis } from '~/server/metaApis';
 const _metaApis = new MetaApis();
 
-const isConnected = ref(true);
+const isConnected = ref(false);
 const pages = ref([]);
 const selectedPages = ref([]);
 const loading = ref(false);
@@ -169,7 +169,12 @@ const logout = async () => {
 
 .facebook-container {
     gap: 20px;
-    margin-top: 25px;
+    margin-top: 120px;
+
+    button {
+        justify-content: center;
+        align-items: center;
+    }
 }
 
 .connected-container {
@@ -212,8 +217,8 @@ const logout = async () => {
     border: 4px solid rgba(0, 0, 0, 0.1);
     border-radius: 50%;
     border-top: 4px solid #fff;
-    width: 1.5rem;
-    height: 1.5rem;
+    width: 1.2rem;
+    height: 1.2rem;
     animation: spin 1s linear infinite;
 }
 @keyframes spin {
