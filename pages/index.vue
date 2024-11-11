@@ -65,13 +65,21 @@ pages.value = [
     }
 ]
 
-onMounted(async () => {
+const checkIfConnectedWithFacebook = async () => {
     const response = await _metaApis.checkIfConnectedWithFacebook();
-    if(response.data.connected) {
+    if(response.status === 200 && response.data) {
+        useCookie('facebook_connected').value = true;
         isConnected.value = true;
+        const fetchedPages= await fetchPagesOfUser();
+        pages.value.push(fetchedPages);
     } else {
+        useCookie('facebook_connected').value = false;
         isConnected.value = false;
     }
+}
+
+onMounted(async () => {
+    checkIfConnectedWithFacebook();
 })
 
 const connectToFacebook = async () => {

@@ -8,7 +8,7 @@
 <script setup>
 onMounted(() => {
     console.log('success');
-    setCookie('facebook_connected', 'true');
+    useCookie('facebook_connected').value = true;
     navigateTo('/?facebook_connected=true');
 })
 </script>
