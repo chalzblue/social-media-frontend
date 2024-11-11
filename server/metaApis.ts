@@ -23,6 +23,7 @@ export class MetaApis {
 
     selectPages = async (pages: string[]) => {
         try {
+            console.log(pages);
             return await axios.post(`${this.backendUrl}/api/v1/meta/facebook/selectPage`, {pages}, {withCredentials: true});
         } catch (error) {
             console.log(error);

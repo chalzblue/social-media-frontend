@@ -19,8 +19,8 @@
                 <p class="connected-msg">You are connected.</p>
                 <p>choose the facebook pages you want to integrate.</p>
                 <div class="page-container flex flex-column">
-                    <ul class="pages" v-for="page in pages" :key="page.id" :class="{ 'selected': selectedPages.includes(page.id) }">
-                        <li @click="toggleSelection(page.id)" class="individual-page">{{ page.name }}</li>
+                    <ul class="pages" v-for="page in pages" :key="page.id" :class="{ 'selected': selectedPages.some(selectedPage => selectedPage.id === page.id) }">
+                        <li @click="toggleSelection(page)" class="individual-page">{{ page.name }}</li>
                     </ul>
                 </div>
                 <button class="purple flex" @click="submitPages">
@@ -109,15 +109,22 @@ const fetchPagesOfUser = async () => {
     }
 }
 
-const toggleSelection = async (pageId) => {
+const toggleSelection = async (page) => {
     try {
-        if (selectedPages.value.includes(pageId)) {
-          // Remove page from selected pages
-          selectedPages.value = selectedPages.value.filter(id => id !== pageId);
+        // Check if selectedPages already contains an object with the same page id
+        const pageIndex = selectedPages.value.findIndex(selectedPage => selectedPage.id === page.id);
+
+        if (pageIndex !== -1) {
+            // Remove page from selectedPages if it exists
+            selectedPages.value.splice(pageIndex, 1);
         } else {
-          // Add page to selected pages
-          selectedPages.value.push(pageId);
+            const pageData = {
+                id: page.id,
+                access_token: page.access_token
+            };
+            selectedPages.value.push(pageData);
         }
+        console.log(selectedPages.value);
     } catch (error) {
         console.error("Error while selecting pages", error);
     }
