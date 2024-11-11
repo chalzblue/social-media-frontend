@@ -4,7 +4,8 @@ export class MetaApis {
     backendUrl = 'http://localhost:4006'
     intializeFacebookOauth = async () => {
         try {
-            return await axios.get(`${this.backendUrl}/auth/facebook`, {withCredentials: true});
+            // @ts-ignore
+            window.location.href = `${this.backendUrl}/auth/facebook`;
         } catch (error) {
             console.log(error);
             throw error;

@@ -68,23 +68,30 @@ pages.value = [
 const connectToFacebook = async () => {
     try {
         loading.value = true;
-        const resposnse = await _metaApis.intializeFacebookOauth();
-        console.log(resposnse);
-        setTimeout(async () => {
-            if(resposnse.status === 200) {
-                isConnected.value = true;
-                pages.value = await fetchPagesOfUser();
-            } else {
-                isConnected.value = false;
-                console.error("Error while connecting to facebook", resposnse.data);
-                alert("Error while connecting to facebook");
-            }
-        }, 1000);
+        await _metaApis.intializeFacebookOauth();
     } catch (error) {
         console.error("Error while connecting to facebook", error);
     } finally {
         loading.value = false;
     }
+}
+
+const route = useRoute();
+if(route.query.facebook_connected) {
+    onMounted(async () => {
+        const facebookConnected = route.query.facebook_connected;
+        if (facebookConnected === 'true') {
+          isConnected.value = true;
+          console.log('Facebook connected');
+          alert('Successfully authenticated with facebook.');
+          const fetchedPages= await fetchPagesOfUser();
+          pages.value.push(fetchedPages);
+        } else {
+          isConnected.value = false;
+          console.log('Facebook not connected');
+          alert('Failed to authenticate with facebook.');
+        }
+    })
 }
 
 const fetchPagesOfUser = async () => {
