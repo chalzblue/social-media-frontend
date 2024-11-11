@@ -8,14 +8,15 @@
 <script setup>
 onMounted(() => {
     console.log('success');
-    alert('Successfully authenticated with facebook.');
     navigateTo('/?facebook_connected=true');
 })
 </script>
 
 <style lang="scss" scoped>
 .success-container {
+    min-height: 100vh;
     justify-content: center;
     align-items: center;
+    gap: 10px;
 }
 </style>
