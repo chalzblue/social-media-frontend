@@ -19,8 +19,8 @@
                 <p class="connected-msg">You are connected.</p>
                 <p>choose the facebook pages you want to integrate.</p>
                 <div class="page-container flex flex-column">
-                    <ul class="pages" v-for="page in pages" :key="page.id">
-                        <li @click="selectPages(page.id)" class="">{{ page.name }}</li>
+                    <ul class="pages" v-for="page in pages" :key="page.id" :class="{ 'selected': selectedPages.includes(page.id) }">
+                        <li @click="toggleSelection(page.id)" class="individual-page">{{ page.name }}</li>
                     </ul>
                 </div>
                 <button class="purple flex" @click="submitPages">
@@ -41,13 +41,7 @@ const pages = ref([]);
 const selectedPages = ref([]);
 const loading = ref(false);
 const logoutLoading = ref(false);
-pages.value = [
-    {
-        id: 2,
-        name: "sample",
-        access_token: ''
-    }
-];
+pages.value = [];
 
 const checkIfConnectedWithFacebook = async () => {
     const response = await _metaApis.checkIfConnectedWithFacebook();
@@ -115,10 +109,15 @@ const fetchPagesOfUser = async () => {
     }
 }
 
-const selectPages = async (pageId) => {
+const toggleSelection = async (pageId) => {
     try {
-        selectedPages.value.push(pageId);
-        console.log(selectedPages.value);
+        if (selectedPages.value.includes(pageId)) {
+          // Remove page from selected pages
+          selectedPages.value = selectedPages.value.filter(id => id !== pageId);
+        } else {
+          // Add page to selected pages
+          selectedPages.value.push(pageId);
+        }
     } catch (error) {
         console.error("Error while selecting pages", error);
     }
@@ -220,6 +219,20 @@ const logout = async () => {
     border-radius: 5px;
     cursor: pointer;
     text-align: center;
+}
+
+.pages:hover {
+    background-color: #ebebeb;
+}
+
+.pages:active {
+    background-color: #ccc;
+}
+
+.selected {
+  background-color: #e0f7fa; /* Highlight color for selected items */
+  border-color: #068578;
+  color: #068578;
 }
 
 .spinner {
