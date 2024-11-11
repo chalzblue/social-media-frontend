@@ -29,4 +29,13 @@ export class MetaApis {
             throw error;
         }
     }
+
+    checkIfConnectedWithFacebook = async () => {
+        try {
+            return await axios.get(`${this.backendUrl}/api/v1/meta/facebook-status`, {withCredentials: true});
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }
 }

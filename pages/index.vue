@@ -65,6 +65,15 @@ pages.value = [
     }
 ]
 
+onMounted(async () => {
+    const response = await _metaApis.checkIfConnectedWithFacebook();
+    if(response.data.connected) {
+        isConnected.value = true;
+    } else {
+        isConnected.value = false;
+    }
+})
+
 const connectToFacebook = async () => {
     try {
         loading.value = true;
@@ -83,13 +92,11 @@ if(route.query.facebook_connected) {
         if (facebookConnected === 'true') {
           isConnected.value = true;
           console.log('Facebook connected');
-          alert('Successfully authenticated with facebook.');
           const fetchedPages= await fetchPagesOfUser();
           pages.value.push(fetchedPages);
         } else {
           isConnected.value = false;
           console.log('Facebook not connected');
-          alert('Failed to authenticate with facebook.');
         }
     })
 }
