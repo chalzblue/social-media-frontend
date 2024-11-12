@@ -49,8 +49,21 @@ const submitForm = async () => {
                 const accessToken = response.data.payload.accessToken;
                 const refreshToken = response.data.payload.refreshToken;
 
-                useCookie('accessToken').value = accessToken;
-                useCookie('refreshToken').value = refreshToken;
+                const tokenCookie = useCookie('access_token', {
+                  httpOnly: false,   // Set to false for client-side access in Nuxt
+                  secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
+                  sameSite: 'None', // Allows cross-site requests in production
+                });
+
+                tokenCookie.value = accessToken;
+
+                const refreshCookie = useCookie('refresh_token', {
+                  httpOnly: false,   // Set to false for client-side access in Nuxt
+                  secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
+                  sameSite: 'None', // Allows cross-site requests in production
+                });
+
+                refreshCookie.value = refreshToken;
 
                 navigateTo('/');
             }
