@@ -37,7 +37,12 @@ const submitForm = async () => {
         setTimeout(() => {
             if (response.status !== 200) {
                 console.log(response);
-                alert("Login failed. Please try again.");
+                alert(response.data.message);
+            }
+
+            if(response.status === 400) {
+                console.log(response);
+                alert(response.data.message);
             }
 
             if (response.status === 200) {
