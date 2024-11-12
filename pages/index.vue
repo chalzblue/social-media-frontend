@@ -120,6 +120,7 @@ const toggleSelection = async (page) => {
         } else {
             const pageData = {
                 id: page.id,
+                name: page.name,
                 access_token: page.access_token
             };
             selectedPages.value.push(pageData);
@@ -133,11 +134,13 @@ const toggleSelection = async (page) => {
 const submitPages = async () => {
     try {
         loading.value = true;
+        console.log(selectedPages.value);
         const response = await _metaApis.selectPages(selectedPages.value);
         setTimeout(() => {
             if(response.status === 200) {
                 console.log("Pages integrated successfully");
                 alert("Pages integrated successfully");
+                navigateTo('/dashboard');
             } else {
                 console.log("Error while submitting selected pages", response.data);
                 alert("Error while submitting selected pages");

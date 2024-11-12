@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export class MetaApis {
-    backendUrl = 'http://localhost:4006'
+    backendUrl = 'https://social-media-integration.onrender.com'
     intializeFacebookOauth = async () => {
         try {
             // @ts-ignore
@@ -23,8 +23,7 @@ export class MetaApis {
 
     selectPages = async (pages: string[]) => {
         try {
-            console.log(pages);
-            return await axios.post(`${this.backendUrl}/api/v1/meta/facebook/selectPage`, {pages}, {withCredentials: true});
+            return await axios.post(`${this.backendUrl}/api/v1/meta/facebook/selectPages`, {pages}, {withCredentials: true});
         } catch (error) {
             console.log(error);
             throw error;

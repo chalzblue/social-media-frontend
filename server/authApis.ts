@@ -1,7 +1,7 @@
 import axios from "axios"
 
 export class AuthApis {
-    backendUrl = 'http://localhost:4006'
+    backendUrl = 'https://social-media-integration.onrender.com'
     // login
     login = async (userData: { email: string, password: string, role: string }) => {
         try {
