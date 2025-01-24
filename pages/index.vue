@@ -33,7 +33,7 @@
 </template>
 
 <script setup>
-import { MetaApis } from '~/server/metaApis';
+import { MetaApis } from "~/server/metaApis";
 const _metaApis = new MetaApis();
 
 const isConnected = ref(false);
@@ -44,127 +44,129 @@ const logoutLoading = ref(false);
 pages.value = [];
 
 const checkIfConnectedWithFacebook = async () => {
-    const response = await _metaApis.checkIfConnectedWithFacebook();
-    if(response.status === 200 && response.data) {
-        useCookie('facebook_connected').value = true;
-        isConnected.value = true;
-        const fetchedPages= await fetchPagesOfUser();
-        if(fetchedPages && fetchedPages.payload.length > 0) {
-            for (const page of fetchedPages.payload) {
-                const pageData = {
-                    id: page.id,
-                    name: page.name,
-                    access_token: page.access_token
-                };
-                pages.value.push(pageData);
-            }
-        }
-    } else {
-        useCookie('facebook_connected').value = false;
-        isConnected.value = false;
-    }
-}
+	const response = await _metaApis.checkIfConnectedWithFacebook();
+	if (response.status === 200 && response.data) {
+		useCookie("facebook_connected").value = true;
+		isConnected.value = true;
+		const fetchedPages = await fetchPagesOfUser();
+		if (fetchedPages && fetchedPages.payload.length > 0) {
+			for (const page of fetchedPages.payload) {
+				const pageData = {
+					id: page.id,
+					name: page.name,
+					access_token: page.access_token,
+				};
+				pages.value.push(pageData);
+			}
+		}
+	} else {
+		useCookie("facebook_connected").value = false;
+		isConnected.value = false;
+	}
+};
 
 onMounted(async () => {
-    checkIfConnectedWithFacebook();
-})
+	checkIfConnectedWithFacebook();
+});
 
 const connectToFacebook = async () => {
-    try {
-        loading.value = true;
-        await _metaApis.intializeFacebookOauth();
-    } catch (error) {
-        console.error("Error while connecting to facebook", error);
-    } finally {
-        loading.value = false;
-    }
-}
+	try {
+		loading.value = true;
+		await _metaApis.intializeFacebookOauth();
+	} catch (error) {
+		console.error("Error while connecting to facebook", error);
+	} finally {
+		loading.value = false;
+	}
+};
 
 const route = useRoute();
-if(route.query.facebook_connected) {
-    onMounted(async () => {
-        const facebookConnected = route.query.facebook_connected;
-        if (facebookConnected === 'true') {
-          isConnected.value = true;
-          console.log('Facebook connected');
-          const fetchedPages= await fetchPagesOfUser();
-          pages.value.push(fetchedPages);
-        } else {
-          isConnected.value = false;
-          console.log('Facebook not connected');
-        }
-    })
+if (route.query.facebook_connected) {
+	onMounted(async () => {
+		const facebookConnected = route.query.facebook_connected;
+		if (facebookConnected === "true") {
+			isConnected.value = true;
+			console.log("Facebook connected");
+			const fetchedPages = await fetchPagesOfUser();
+			pages.value.push(fetchedPages);
+		} else {
+			isConnected.value = false;
+			console.log("Facebook not connected");
+		}
+	});
 }
 
 const fetchPagesOfUser = async () => {
-    try {
-        const response = await _metaApis.fetchPages();
-        if(response.status !== 200) {
-            console.error("Error while fetching pages", response.data);
-            return [];
-        }
-        return response.data;;
-    } catch (error) {
-        console.error("Error while fetching pages", error);   
-    }
-}
+	try {
+		const response = await _metaApis.fetchPages();
+		if (response.status !== 200) {
+			console.error("Error while fetching pages", response.data);
+			return [];
+		}
+		return response.data;
+	} catch (error) {
+		console.error("Error while fetching pages", error);
+	}
+};
 
 const toggleSelection = async (page) => {
-    try {
-        // Check if selectedPages already contains an object with the same page id
-        const pageIndex = selectedPages.value.findIndex(selectedPage => selectedPage.id === page.id);
+	try {
+		// Check if selectedPages already contains an object with the same page id
+		const pageIndex = selectedPages.value.findIndex(
+			(selectedPage) => selectedPage.id === page.id,
+		);
 
-        if (pageIndex !== -1) {
-            // Remove page from selectedPages if it exists
-            selectedPages.value.splice(pageIndex, 1);
-        } else {
-            const pageData = {
-                id: page.id,
-                name: page.name,
-                access_token: page.access_token
-            };
-            selectedPages.value.push(pageData);
-        }
-        console.log(selectedPages.value);
-    } catch (error) {
-        console.error("Error while selecting pages", error);
-    }
-}
+		if (pageIndex !== -1) {
+			// Remove page from selectedPages if it exists
+			selectedPages.value.splice(pageIndex, 1);
+		} else {
+			const pageData = {
+				id: page.id,
+				name: page.name,
+				access_token: page.access_token,
+			};
+			selectedPages.value.push(pageData);
+		}
+		console.log(selectedPages.value);
+	} catch (error) {
+		console.error("Error while selecting pages", error);
+	}
+};
 
 const submitPages = async () => {
-    try {
-        loading.value = true;
-        console.log(selectedPages.value);
-        const response = await _metaApis.selectPages(selectedPages.value);
-        setTimeout(() => {
-            if(response.status === 200) {
-                console.log("Pages integrated successfully");
-                alert("Pages integrated successfully");
-                navigateTo('/dashboard');
-            } else {
-                console.log("Error while submitting selected pages", response.data);
-                alert("Error while submitting selected pages");
-            }
-        }, 1000)
-    } catch (error) {
-        console.error("Error while submit selected pages", error);
-    } finally {
-        loading.value = false;
-    }
-}
+	try {
+		loading.value = true;
+		console.log(selectedPages.value);
+		const response = await _metaApis.selectPages(selectedPages.value);
+		setTimeout(() => {
+			if (response.status === 200) {
+				console.log("Pages integrated successfully");
+				alert("Pages integrated successfully");
+				navigateTo("/dashboard");
+			} else {
+				console.log("Error while submitting selected pages", response.data);
+				alert("Error while submitting selected pages");
+			}
+		}, 1000);
+	} catch (error) {
+		console.error("Error while submit selected pages", error);
+	} finally {
+		loading.value = false;
+	}
+};
 
 const logout = async () => {
-    try {
-        logoutLoading.value = true;
-        setTimeout(() => {
-            useCookie('accessToken').value = null;
-            useCookie('refreshToken').value = null;
-            navigateTo('/login');
-        }, 1000)
-    } catch (error) {
-        console.error("Error while logging out", error);
-    }
-}
+	try {
+		logoutLoading.value = true;
+		setTimeout(() => {
+			useCookie("accessToken").value = null;
+			useCookie("refreshToken").value = null;
+			navigateTo("/login");
+		}, 1000);
+	} catch (error) {
+		console.error("Error while logging out", error);
+	}
+};
 </script>
 
 <style lang="scss" scoped>
