@@ -1,7 +1,8 @@
 import axios from "axios";
+import { useRuntimeConfig } from "nuxt/app";
 
 export class AuthApis {
-	backendUrl = "https://socials.bluecast.host/api/v1";
+	backendUrl = useRuntimeConfig().public.apiBaseUrl;
 	// login
 	login = async (userData: {
 		email: string;

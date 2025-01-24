@@ -1,7 +1,8 @@
 import axios from "axios";
+import { useRuntimeConfig } from "nuxt/app";
 
 export class MetaApis {
-	backendUrl = "https://socials.bluecast.host/api/v1";
+	backendUrl = useRuntimeConfig().public.apiBaseUrl;
 	intializeFacebookOauth = async () => {
 		try {
 			// @ts-ignore
