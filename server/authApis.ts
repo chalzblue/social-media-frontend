@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export class AuthApis {
-	backendUrl = "https://socials.bluecast.host/";
+	backendUrl = "https://socials.bluecast.host/api/v1";
 	// login
 	login = async (userData: {
 		email: string;
