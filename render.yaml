@@ -2,11 +2,15 @@ services:
   - type: web
     name: social-media-integration-frontend
     env: node
-    buildCommand: npm install && npm run build
+    buildCommand: npm ci && npm run build
     startCommand: node .output/server/index.mjs
     envVars:
-      - key: PORT
-        value: 10000
+      - key: NITRO_HOST
+        value: 0.0.0.0
+      - key: NITRO_PORT
+        value: 3000
       - key: NODE_ENV
         value: production
+      - key: PORT
+        value: 3000
     autoDeploy: true 
